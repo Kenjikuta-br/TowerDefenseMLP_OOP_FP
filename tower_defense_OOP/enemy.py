@@ -7,30 +7,30 @@ class Enemy:
         self.x = x
         self.y = y
         self.speed = speed
-        self.rect = pygame.Rect(x, y, 30, 30)  # Define a área do inimigo
+        self.rect = pygame.Rect(x, y, 30, 30)  # Defines the area of the enemy
 
     def take_damage(self, amount):
-        """Método para receber dano"""
+        """Method to receive damage"""
         self.health -= amount
         if self.health <= 0:
-            self.die()  # Chama o método para matar o inimigo quando a saúde é zero
+            self.die()  # Calls the method to kill the enemy when health reaches zero
 
     def move(self):
-        """Movimenta o inimigo para a direita"""
+        """Moves the enemy to the right"""
         self.x += self.speed
         self.rect.x = self.x
 
     def draw(self, screen):
-        """Desenha o inimigo na tela"""
-        pygame.draw.rect(screen, (255, 0, 0), self.rect)  # Vermelho
+        """Draws the enemy on the screen"""
+        pygame.draw.rect(screen, (255, 0, 0), self.rect)  # Red
 
     def die(self):
-        """Método que mata o inimigo, colocando-o fora da tela"""
-        print(f"{self.name} foi derrotado!")
-        self.x = +1000  # Coloca o inimigo fora da tela
+        """Method that kills the enemy by moving it off the screen"""
+        print(f"{self.name} was defeated!")
+        self.x = +1000  # Moves the enemy off the screen
         self.rect.x = self.x
 
     def __del__(self):
-        """Método destrutor chamado quando o objeto é destruído"""
-        print(f"{self.name} foi destruído.")
-        # Aqui você pode realizar ações adicionais, como liberar recursos ou limpar associações, se necessário.
+        """Destructor method called when the object is destroyed"""
+        print(f"{self.name} was destroyed.")
+        # Here you can perform additional actions, like releasing resources or cleaning up associ

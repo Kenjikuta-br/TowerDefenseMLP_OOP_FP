@@ -3,42 +3,42 @@ from tower import Tower
 from enemy import Enemy
 import settings
 
-# Inicializa o Pygame
+# Initialize Pygame
 pygame.init()
 
-# Configura a tela do jogo
+# Set up the game screen
 screen = pygame.display.set_mode((settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT))
 pygame.display.set_caption("Tower Defense")
 
-# Inicializa a torre e o inimigo
+# Initialize the tower and the enemy
 tower = Tower(200, 250, 10, 300)
 enemy = Enemy("Goblin", 100, 50, 250, 1)
 
-# Loop principal do jogo
+# Main game loop
 running = True
 while running:
     screen.fill(settings.BACKGROUND_COLOR)
 
-    # Verifica os eventos (como o fechamento da janela)
+    # Check for events (like closing the window)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
 
-    # Movimento do inimigo
+    # Enemy movement
     enemy.move()
 
-    # Torre ataca se o inimigo estiver dentro do alcance
+    # Tower attacks if the enemy is within range
     tower.attack(enemy)
 
-    # Desenha a torre e o inimigo
+    # Draw the tower and the enemy
     tower.draw(screen)
     enemy.draw(screen)
 
-    # Atualiza a tela
+    # Update the screen
     pygame.display.update()
 
-    # Define a taxa de atualização do jogo
+    # Set the game frame rate
     pygame.time.Clock().tick(60)
 
-# Encerra o Pygame
+# Quit Pygame
 pygame.quit()
