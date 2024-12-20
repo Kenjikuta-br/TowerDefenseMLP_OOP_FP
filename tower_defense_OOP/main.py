@@ -46,7 +46,7 @@ clock = pygame.time.Clock()
 running = True
 dt = 0
 
-def handle_menu_click(menu, tower, clicked_option, index):
+def handle_menu_click(menu, towers, clicked_option, index):
     """Função que lida com a interação do menu e realiza ações correspondentes."""
     if clicked_option == "Criar Torre 1":
         new_tower = Tower(menu.x, menu.y, 10, 150, "torre1", "tower_defense_OOP/assets/teste.png")
@@ -56,7 +56,7 @@ def handle_menu_click(menu, tower, clicked_option, index):
         menu.toggle_visibility()
     elif clicked_option == "Vender Torre":
         menu.tower.sell()
-        tower = None # Remove a torre após vender
+        towers[index] = None # Remove a torre após vender
         menu.tower = None   # Atualiza o menu para refletir que não há mais torre
         menu.toggle_visibility()
 
@@ -73,7 +73,7 @@ while running:
             for i in range(4):
                 clicked_option = menus[i].handle_click(mouse_pos)
                 if clicked_option:
-                    handle_menu_click(menus[i], towers[i], clicked_option, i)
+                    handle_menu_click(menus[i], towers, clicked_option, i)
 
     # Enemy movement
     # enemy.move()
