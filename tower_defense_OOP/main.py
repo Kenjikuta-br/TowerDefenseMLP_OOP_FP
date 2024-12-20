@@ -11,14 +11,30 @@ pygame.init()
 screen = pygame.display.set_mode((settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT))
 pygame.display.set_caption("Tower Defense")
 
-# Initialize the tower and the enemy
-# x, y, damage, range
-# tower = Tower(200, 250, 10, 150, "tower_defense_OOP/assets/teste.png")
-tower = None # Inicialmente, não há torre
-# x, y
-menu = Menu(100, 100, tower)
+
+# Initialize the towers and their respective menus
+towers = []
+menus = []
+
+# Criando 4 torres com seus menus correspondentes
+tower1 = None 
+menu1 = Menu(100, 100, tower1)
+
+tower2 = None 
+menu2 = Menu(300, 100, tower2)
+
+tower3 = None 
+menu3 = Menu(500, 100, tower3)
+
+tower4 = None 
+menu4 = Menu(700, 100, tower4)
+
+# Adiciona as torres e menus nas listas
+towers.extend([tower1, tower2, tower3, tower4])
+menus.extend([menu1, menu2, menu3, menu4])
+
 # Atualize o menu com as opções corretas
-menu.update_options()
+# menu.update_options()
 
 
 
@@ -30,6 +46,20 @@ clock = pygame.time.Clock()
 running = True
 dt = 0
 
+def handle_menu_click(menu, tower, clicked_option, index):
+    """Função que lida com a interação do menu e realiza ações correspondentes."""
+    if clicked_option == "Criar Torre 1":
+        new_tower = Tower(menu.x, menu.y, 10, 150, "torre1", "tower_defense_OOP/assets/teste.png")
+        menu.tower = new_tower
+        towers[index] = new_tower  # Substitui None pela nova torre
+        print("criando torre")
+        menu.toggle_visibility()
+    elif clicked_option == "Vender Torre":
+        menu.tower.sell()
+        tower = None # Remove a torre após vender
+        menu.tower = None   # Atualiza o menu para refletir que não há mais torre
+        menu.toggle_visibility()
+
 while running:
     screen.fill(settings.BACKGROUND_COLOR)
 
@@ -39,16 +69,11 @@ while running:
             running = False
         elif event.type == pygame.MOUSEBUTTONDOWN:
             mouse_pos = pygame.mouse.get_pos()
-            clicked_option = menu.handle_click(mouse_pos)
-            if clicked_option == "Criar Torre 1":
-                tower = Tower(100, 100, 10, 150,"torre 1" ,"tower_defense_OOP/assets/teste.png")
-                menu.tower = tower  # Atualiza a torre no menu
-                menu.toggle_visibility()
-            elif clicked_option == "Vender Torre":
-                tower.sell()
-                tower = None  # Remove a torre após vender
-                menu.tower = None  # Atualiza o menu para refletir que não há mais torre
-                menu.toggle_visibility()
+             # Itera sobre cada menu para verificar se houve um clique
+            for i in range(4):
+                clicked_option = menus[i].handle_click(mouse_pos)
+                if clicked_option:
+                    handle_menu_click(menus[i], towers[i], clicked_option, i)
 
     # Enemy movement
     # enemy.move()
@@ -56,10 +81,14 @@ while running:
     # Tower attacks if the enemy is within range
     # tower.attack(enemy)
 
-    # Draw the tower and the enemy
-    if tower != None:
-        tower.draw(screen)
-    menu.draw(screen)
+    # Draw the towers and the menus
+    for tower in towers:
+        if tower != None:
+            tower.draw(screen) 
+    for menu in menus:
+        menu.draw(screen)
+
+
     # enemy.draw(screen)
 
     # Update the screen
