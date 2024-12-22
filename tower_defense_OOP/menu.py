@@ -4,7 +4,7 @@ X_TOWER = 64
 Y_TOWER = 110
 
 class Menu:
-    def __init__(self, x, y, tower=None):
+    def __init__(self, x, y, manager, tower=None):
         self.x = x  # Posição x do menu
         self.y = y  # Posição y do menu
         self.width = 180  # Largura do menu
@@ -15,6 +15,7 @@ class Menu:
         self.is_visible = False  # Define se o menu está visível ou não
         self.option_height = 30  # Altura de cada opção
         self.tower = tower  # Torre na posição (pode ser None se não houver torre)
+        self.manager = manager
     
     @property
     def is_visible(self):
