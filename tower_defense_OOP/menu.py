@@ -7,9 +7,9 @@ class Menu:
     def __init__(self, x, y, manager, tower=None):
         self.x = x  # Posição x do menu
         self.y = y  # Posição y do menu
-        self.width = 180  # Largura do menu
-        self.height = 90  # Altura total do menu (ajustada dinamicamente)
-        self.font = pygame.font.Font(None, 24)  # Fonte do texto
+        self.width = 64  # Largura do menu
+        self.height = 110  # Altura total do menu (ajustada dinamicamente)
+        self.font = pygame.font.Font(None, 12)  # Fonte do texto
         self.background_color = (50, 50, 50)  # Cor de fundo do menu
         self.text_color = (255, 255, 255)  # Cor do texto
         self.is_visible = False  # Define se o menu está visível ou não

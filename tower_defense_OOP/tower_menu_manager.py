@@ -1,9 +1,8 @@
 import pygame
 from tower import Tower
-from menu import Menu
-
-import pygame
-from tower import Tower
+from ice_tower import IceTower
+from electric_tower import EletricTower
+from black_tower import BlackTower
 from menu import Menu
 
 class TowerMenuManager:
@@ -42,20 +41,18 @@ class TowerMenuManager:
         tower = None
         menu = Menu(x, y, manager, tower)
         self.__towers.append(tower)
-        self.__menus.append(menu)
+        self.__menus.append(menu) 
 
-    def add_tower(self, x, y, damage, range, tower_type, sprite_path, index=None):
+    def add_tower(self, tower, index=None):
         """Substitui uma torre existente na lista ou adiciona uma nova torre"""
-        tower = Tower(x, y, damage, range, tower_type, sprite_path)
+        print(f"index:{index}")
+        print(f"lenght:{len(self.__towers)}")
         
         if index is not None and 0 <= index < len(self.__towers):
             # Substitui a torre existente no índice fornecido
             self.__towers[index] = tower
-            print(f"Torre {tower_type} substituída no índice {index} em ({x}, {y})")
-        else:
-            # Caso o índice não seja válido ou não seja fornecido, adiciona ao final
-            self.__towers.append(tower)
-            print(f"Torre {tower_type} adicionada em ({x}, {y})")
+            print(f"Torre {tower.type} substituída no índice {index} em ({tower.x}, {tower.y})")
+
 
     def remove_tower(self, tower):
         """Remove uma torre da lista de torres"""
@@ -72,23 +69,69 @@ class TowerMenuManager:
 
     def draw(self, screen):
         """Desenha todas as torres e seus projéteis"""
+        for menu in self.__menus:
+            menu.draw(screen)  # Desenha cada menu
         for tower in self.__towers:
             if tower != None:
                 tower.draw(screen)  # Desenha cada torre
-        for menu in self.__menus:
-            menu.draw(screen)  # Desenha cada menu
 
-    def handle_menu_click(self, menu, towers, clicked_option, index):
+    
+    def handle_menu_click(self, clicked_option, index, player):
+        menus = self.menus
+        menu = menus[index]
+        towers = self.towers
+
+        # Define the costs of the towers
+        tower_costs = {
+            "Criar Torre 1": 100,  # Cost for Tower 1
+            "Criar Torre 2": 150,  # Cost for Ice Tower
+            "Criar Torre 3": 200   # Cost for Electric Tower
+        }
+
         """Função que lida com a interação do menu e realiza ações correspondentes."""
-        if clicked_option == "Criar Torre 1":
-            #x, y, damage, range, type, sprite_path
-            new_tower = Tower(menu.x, menu.y, 10, 200, "torre1", "tower_defense_OOP/assets/teste.png", self)
-            menu.tower = new_tower
-            towers[index] = new_tower  # Substitui None pela nova torre
-            print("criando torre")
-            menu.toggle_visibility()
+        if clicked_option in tower_costs:
+            # Check if the player has enough money
+            cost = tower_costs[clicked_option]
+            if player.money >= cost:
+                if clicked_option == "Criar Torre 1":
+                    # Create Tower 1
+                    new_tower = BlackTower(menu.x, menu.y, 10, 200, "tower_defense_OOP/assets/black_tower.png", self)
+                    self.add_tower(new_tower, index)
+                    menu.tower = new_tower
+                    print("Criando Torre 1")
+                elif clicked_option == "Criar Torre 2":
+                    # Create Ice Tower
+                    new_tower = IceTower(menu.x, menu.y, 10, 200, "tower_defense_OOP/assets/ice_tower.png", self, 2)
+                    self.add_tower(new_tower, index)
+                    menu.tower = new_tower
+                    print("Criando Torre 2")
+                elif clicked_option == "Criar Torre 3":
+                    # Create Electric Tower
+                    new_tower = EletricTower(menu.x, menu.y, 10, 200, "tower_defense_OOP/assets/eletric_tower.png", self)
+                    self.add_tower(new_tower, index)
+                    menu.tower = new_tower
+                    print("Criando Torre 3")
+                
+                # Deduct the cost from the player's money
+                player.money -= cost
+                print(f"Dinheiro restante: {player.money}")
+                
+                # Toggle menu visibility
+                menu.toggle_visibility()
+            else:
+                print("Dinheiro insuficiente para criar essa torre!")
         elif clicked_option == "Vender Torre":
-            menu.tower.sell()
-            towers[index] = None # Remove a torre após vender
-            menu.tower = None   # Atualiza o menu para refletir que não há mais torre
-            menu.toggle_visibility()
+            if menu.tower:
+                # Add money back to the player when selling the tower
+                sell_price = 50  # Example: Towers are sold for 50 (adjust as needed)
+                player.money += sell_price
+                print(f"Vendendo Torre. Dinheiro ganho: {sell_price}. Dinheiro total: {player.money}")
+                
+                # Remove the tower
+                menu.tower.sell()
+                towers[index] = None  # Remove the tower from the list
+                menu.tower = None     # Update the menu to reflect no tower
+                menu.toggle_visibility()
+            else:
+                print("Nenhuma torre para vender!")
+
