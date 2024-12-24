@@ -119,7 +119,7 @@ class Tower:
                     if distance < closest_distance:  # Update the closest enemy
                         closest_distance = distance
                         closest_enemy = enemy
-                        print(f"{enemy.name}")
+                        #print(f"{enemy.name}")
 
             if closest_enemy != None:  # If there's an enemy within range, attack it
                 # Launch a new projectile towards the closest enemy

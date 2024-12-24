@@ -25,5 +25,5 @@ class IceTower(Tower):
                 # Launch a new projectile towards the closest enemy
                 projectile = Projectile(self.x + self.rect.width // 2, self.y + self.rect.height // 2, closest_enemy, self.damage)
                 self.projectiles.append(projectile)
-                enemy.slow()  # Apply slowing effect to the enemy
+                closest_enemy.slow()  # Apply slowing effect to the enemy
                 self.last_shot_time = current_time  # Reset the timer after firing a projectile

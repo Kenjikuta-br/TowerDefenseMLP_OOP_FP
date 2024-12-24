@@ -1,6 +1,7 @@
 class EnemyManager:
-    def __init__(self):
+    def __init__(self, delta_time=0):
         self.__enemies = []
+        self.__delta_time = delta_time
 
     @property
     def enemies(self):
@@ -14,6 +15,17 @@ class EnemyManager:
             self.__enemies = enemies
         else:
             raise ValueError("Enemies deve ser uma lista.")
+        
+    @property
+    def delta_time(self):
+        """Getter para acessar o delta_time"""
+        return self.__delta_time
+
+    @delta_time.setter
+    def delta_time(self, delta_time):
+        """Setter para definir delta_time."""
+        self.__delta_time = delta_time
+        
 
     def add_enemy(self, enemy):
         """Adiciona um inimigo à lista."""
@@ -26,9 +38,10 @@ class EnemyManager:
 
     def update(self):
         """Atualiza o estado de todos os inimigos."""
-        for enemy in self.__enemies:
+        for enemy in self.enemies:
             if not enemy.is_dead:
                 enemy.move()
+                enemy.update_animation(self.delta_time)
 
     def draw(self, screen):
         """Desenha todos os inimigos na tela."""

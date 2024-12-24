@@ -2,7 +2,7 @@ import pygame
 import math
 
 class Enemy:
-    def __init__(self, name, health, x, y, speed, manager, path):
+    def __init__(self, name, health, x, y, speed, manager, path, reward_money,player, damage=10):
         self._name = name
         self._health = health
         self._x = x
@@ -16,6 +16,27 @@ class Enemy:
         self._slow_effect = 2  # Divide speed by slow_effect if slowed
         self._path = path  # List of waypoints (e.g., [(x1, y1), (x2, y2), ...])
         self._current_waypoint = 0  # Index of the next waypoint to move towards
+        self._reward_money = reward_money  # Amount of money rewarded when killed
+        self.player = player  # Store the player instanc
+        self.damage = damage  # Dano que o inimigo causa na base
+
+         # Animation setup
+        self.animations = None  # Dictionary with spritesheets
+        self.current_animation = "walk_side"  # Initial animation state
+        self.animation_frame = 0
+        self.animation_speed = 0.1  # Speed of frame changes
+        self.time_accumulator = 0
+
+    # Properties for reward_money
+    @property
+    def reward_money(self):
+        return self._reward_money
+
+    @reward_money.setter
+    def reward_money(self, value):
+        if value < 0:
+            raise ValueError("Reward money cannot be negative.")
+        self._reward_money = value
 
     # Property for name
     @property
@@ -142,8 +163,21 @@ class Enemy:
         if self.health <= 0:
             self.die()  # Calls the method to kill the enemy when health reaches zero
 
+    
+    def update_animation(self, delta_time):
+        """Updates the animation frame based on time."""
+        self.time_accumulator += delta_time
+        if self.time_accumulator >= self.animation_speed:
+            self.time_accumulator = 0
+            self.animation_frame = (self.animation_frame + 1) % len(self.animations[self.current_animation])
+
+    def draw(self, screen):
+        """Draws the current frame of the animation on the screen."""
+        frame = self.animations[self.current_animation][self.animation_frame]
+        screen.blit(frame, (self._x, self._y))
+
     def move(self):
-        """Moves the enemy along the path"""
+        """Moves the enemy along the path and updates animation direction."""
         if self._current_waypoint < len(self._path):
             target_x, target_y = self._path[self._current_waypoint]
             dx = target_x - self.x
@@ -163,19 +197,54 @@ class Enemy:
                 self.x += (dx / distance) * current_speed
                 self.y += (dy / distance) * current_speed
 
-    def draw(self, screen):
-        """Draws the enemy on the screen"""
-        pygame.draw.rect(screen, (255, 0, 0), self.rect)  # Red
+            # Update animation direction
+            if abs(dx) > abs(dy):
+                self.current_animation = "walk_side"
+            elif dy > 0:
+                self.current_animation = "walk_down"
+            else:
+                self.current_animation = "walk_up"
+        else:
+            # O inimigo alcançou o final do caminho
+            self.reach_base()
+
+    def reach_base(self):
+        """Causa dano à base do jogador e se remove."""
+        print(f"{self.name} alcançou a base e causou {self.damage} de dano!")
+        self.player.lose_health(self.damage)
+        self._is_dead = True
+        self.manager.remove_enemy(self)  # Remove o inimigo do jogo
+
 
     def die(self):
         """Kills the enemy by marking it as dead and removing it from the game"""
+        if self.player != None:  # Ensure the player exists
+            if not(self._is_dead):
+                self.player.add_money(self.reward_money)  # Add money to the player
         self._is_dead = True
         print(f"{self.name} was defeated!")
+
         self.manager.remove_enemy(self)  # Removes the enemy from the manager
 
     def slow(self):
         """Applies the slow effect to the enemy"""
         self.is_slowed = True
+
+
+    def load_spritesheet(self, file, rows, cols):
+        """Loads a spritesheet and splits it into individual frames."""
+        sheet = pygame.image.load(file).convert_alpha()
+        sheet_width, sheet_height = sheet.get_size()
+        frame_width = sheet_width // cols
+        frame_height = sheet_height // rows
+        frames = []
+
+        for row in range(rows):
+            for col in range(cols):
+                frame = sheet.subsurface(pygame.Rect(col * frame_width, row * frame_height, frame_width, frame_height))
+                frames.append(frame)
+        return frames
+    
 
     def __del__(self):
         """Destructor method to clean up resources when the enemy is destroyed"""
