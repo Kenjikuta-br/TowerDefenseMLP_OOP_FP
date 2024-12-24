@@ -3,6 +3,7 @@ from player import Player
 from towers_menu import TowerMenuManager
 from enemys import Enemy, Slime, Goblin, Wolf, EnemyManager
 from towers_menu import Menu
+from waves import WaveManager, Wave
 import settings
 
 # Initialize Pygame
@@ -43,7 +44,7 @@ def can_build_here(x, y):
 
 def main():
     # Initialize player
-    player = Player(money=1000, base_health=150)
+    player = Player(money=300, base_health=150)
 
     # Create TowerMenuManager
     tower_menu_manager = TowerMenuManager()
@@ -64,6 +65,20 @@ def main():
     enemy1 = Slime(0, 471, path,player, enemy_manager)
     enemy2 = Wolf(0, 471, path,player, enemy_manager)
     
+    wave_manager = WaveManager(0, 471, enemy_manager, player, path)
+
+    # Configurando as waves
+    wave1 = Wave(1, [(Slime, 5)], 1, 5)  # 5 Slimes, 1 segundo entre cada spawn, 5 segundos até a próxima wave
+    wave2 = Wave(2, [(Slime, 3), (Goblin, 2)], 1, 10)  # 3 Slimes e 2 Goblins
+    wave3 = Wave(3, [(Goblin, 4), (Wolf, 1)], 1, 10)  # 4 Goblins e 1 Wolf
+
+    wave_manager.add_wave(wave1)
+    wave_manager.add_wave(wave2)
+    wave_manager.add_wave(wave3)
+
+    # Começando a primeira wave
+    wave_manager.start_next_wave()
+
 
     # Setup clock and game loop
     clock = pygame.time.Clock()
@@ -113,6 +128,8 @@ def main():
 
         # Draw player status
         player.draw_status(screen, font)
+
+        wave_manager.update(delta_time)
 
 
 

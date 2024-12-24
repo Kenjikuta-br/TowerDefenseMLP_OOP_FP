@@ -139,11 +139,13 @@ class Tower:
             if projectile.check_collision():  # Check for collision
                 self.projectiles.remove(projectile)  # Remove projectile after collision
 
-    def draw(self, screen):
+    def draw_tower(self, screen):
         """Draws the tower and its projectiles"""
         screen.blit(self.sprite, (self.x, self.y))
         pygame.draw.circle(screen, (0, 255, 0), (self.x + self.sprite.get_width() // 2, self.y + self.sprite.get_height() // 2), self.range, 1)
-        # Draw all projectiles
+
+    def draw_projectiles(self, screen):
+         # Draw all projectiles
         for projectile in self.projectiles:
             #print(f"{self.type}")
             projectile.draw(screen)
