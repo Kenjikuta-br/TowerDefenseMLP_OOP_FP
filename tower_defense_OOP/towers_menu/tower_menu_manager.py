@@ -1,9 +1,7 @@
-import pygame
-from tower import Tower
-from ice_tower import IceTower
-from electric_tower import EletricTower
-from black_tower import BlackTower
-from menu import Menu
+from .ice_tower import IceTower
+from .electric_tower import EletricTower
+from .black_tower import BlackTower
+from .menu import Menu
 
 class TowerMenuManager:
     def __init__(self):

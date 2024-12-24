@@ -1,9 +1,9 @@
-from enemy import Enemy
+from .enemy import Enemy
 
 class Wolf(Enemy):
     def __init__(self, x, y, path, player, manager):
         # Wolves have high speed and moderate health, but they deal less damage
-        super().__init__(name="Wolf", health=80, x=x, y=y, speed=5, 
+        super().__init__(name="Wolf", health=80, x=x, y=y, speed=3, 
                          manager=manager, path=path, reward_money=15, player=player, damage=8)
         self._pack_attack = False  # Wolves can activate pack attack for extra damage
         animations = {

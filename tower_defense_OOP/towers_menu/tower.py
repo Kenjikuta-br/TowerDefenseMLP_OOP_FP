@@ -1,6 +1,6 @@
 import pygame
 import math
-from projectile import Projectile
+from projectiles.projectile import Projectile
 
 class Tower:
     def __init__(self, x, y, damage, range, type, sprite_path, manager):

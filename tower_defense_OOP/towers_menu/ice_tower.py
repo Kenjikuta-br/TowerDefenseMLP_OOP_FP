@@ -1,7 +1,6 @@
-import pygame
-from tower import Tower
+from .tower import Tower
 import math
-from projectile import Projectile
+from projectiles.projectile import Projectile
 
 class IceTower(Tower):
     def __init__(self, x, y, damage, range, sprite_path, manager, slow_effect):

@@ -1,13 +1,8 @@
 import pygame
 from player import Player
-from tower import Tower
-from enemy import Enemy
-from enemy_slime import Slime
-from enemy_goblin import Goblin
-from enemy_wolf import Wolf
-from menu import Menu
-from enemy_manager import EnemyManager
-from tower_menu_manager import TowerMenuManager
+from towers_menu import TowerMenuManager
+from enemys import Enemy, Slime, Goblin, Wolf, EnemyManager
+from towers_menu import Menu
 import settings
 
 # Initialize Pygame
@@ -67,7 +62,7 @@ def main():
     enemy_manager = EnemyManager()
     path = [(1032, 471), (1032, 251), (328, 251), (328, 141), (1280, 141)]
     enemy1 = Slime(0, 471, path,player, enemy_manager)
-    #enemy2 = Wolf(0, 471, path,player, enemy_manager)
+    enemy2 = Wolf(0, 471, path,player, enemy_manager)
     
 
     # Setup clock and game loop
@@ -105,18 +100,21 @@ def main():
                     if clicked_option:
                         tower_menu_manager.handle_menu_click(clicked_option, i, player)
 
-        # Draw player status
-        player.draw_status(screen, font)
-
         # Update and draw towers and enemies
         tower_menu_manager.update(enemy_manager.enemies, current_time)
         tower_menu_manager.draw(screen)
+
+        # Draw grid
+        draw_grid(screen, settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT)
+
         enemy_manager.delta_time = delta_time
         enemy_manager.update()
         enemy_manager.draw(screen)
 
-        # Draw grid
-        draw_grid(screen, settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT)
+        # Draw player status
+        player.draw_status(screen, font)
+
+
 
         # Update the screen
         pygame.display.update()

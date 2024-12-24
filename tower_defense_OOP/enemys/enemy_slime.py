@@ -1,4 +1,4 @@
-from enemy import Enemy
+from .enemy import Enemy
 
 class Slime(Enemy):
     def __init__(self, x, y, path, player, manager):

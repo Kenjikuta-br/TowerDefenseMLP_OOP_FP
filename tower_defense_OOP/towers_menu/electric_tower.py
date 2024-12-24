@@ -1,7 +1,5 @@
-import pygame
-from tower import Tower
-import math
-from projectile import Projectile
+from .tower import Tower
+from projectiles.projectile import Projectile
 
 class EletricTower(Tower):
     def __init__(self, x, y, damage, range, sprite_path, manager):

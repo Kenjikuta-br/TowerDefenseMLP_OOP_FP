@@ -28,6 +28,7 @@ class Enemy:
         self.animation_frame = 0
         self.animation_speed = 0.1  # Speed of frame changes
         self.time_accumulator = 0
+        self_facing_right = True
 
     # Properties for reward_money
     @property
@@ -176,8 +177,12 @@ class Enemy:
     def draw(self, screen):
         """Draws the current frame of the animation on the screen."""
         frame = self.animations[self.current_animation][self.animation_frame]
+         # Flip the frame if facing left
+        if self.current_animation == "walk_side" and self._facing_right:
+            frame = pygame.transform.flip(frame, True, False)
         screen.blit(frame, (self._x, self._y))
-        self.draw_hitbox(screen)
+        #for debuggin hitbox
+        #self.draw_hitbox(screen)
 
     def draw_hitbox(self, screen, color=(255, 0, 0)):
         """
@@ -214,12 +219,13 @@ class Enemy:
             # Update animation direction
             if abs(dx) > abs(dy):
                 self.current_animation = "walk_side"
+                self._facing_right = dx > 0  # True if moving right
             elif dy > 0:
                 self.current_animation = "walk_down"
             else:
                 self.current_animation = "walk_up"
         else:
-            # O inimigo alcançou o final do caminho
+            # Enemy reached the end of the path
             self.reach_base()
 
     def reach_base(self):
