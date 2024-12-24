@@ -69,11 +69,11 @@ class TowerMenuManager:
 
     def draw(self, screen):
         """Desenha todas as torres e seus projéteis"""
-        for menu in self.__menus:
-            menu.draw(screen)  # Desenha cada menu
         for tower in self.__towers:
             if tower != None:
                 tower.draw(screen)  # Desenha cada torre
+        for menu in self.__menus:
+            menu.draw(screen)  # Desenha cada menu
 
     
     def handle_menu_click(self, clicked_option, index, player):

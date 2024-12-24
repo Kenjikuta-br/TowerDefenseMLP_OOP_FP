@@ -80,6 +80,8 @@ class Menu:
                 index = (mouse_pos[1] - self.y) // self.option_height
                 if index < len(self.options):
                     return self.options[index]  # Retorna a opção selecionada
+            else:
+                    self.toggle_visibility()
         else:
             #Verifica se o clique foi dentro da área do menu para ativar ou desativar a visibilidade
             if self.x <= mouse_pos[0] <= self.x + self.width and self.y <= mouse_pos[1] <= self.y + self.height:

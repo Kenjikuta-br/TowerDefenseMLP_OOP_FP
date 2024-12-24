@@ -48,7 +48,7 @@ class Player:
         if amount > 0:
             self._base_health = max(0, self._base_health - amount)  # Health cannot go below zero
 
-    def draw_status(self, screen, font, position=(10, 10), color=(255, 255, 255)):
+    def draw_status(self, screen, font, position=(10, 10), color=(0, 0, 0)):
         """
         Draws the player's money and health on the screen.
 

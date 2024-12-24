@@ -10,7 +10,7 @@ class Enemy:
         self._speed = speed
         self._manager = manager  # Reference to the manager
         self._manager.add_enemy(self)  # Automatically adds the enemy
-        self._rect = pygame.Rect(x, y, 30, 30)  # Defines the area of the enemy
+        self._rect = pygame.Rect(x, y, 20, 20)  # Defines the area of the enemy
         self._is_dead = False  # Initializes the is_dead attribute
         self._is_slowed = False
         self._slow_effect = 2  # Divide speed by slow_effect if slowed
@@ -19,6 +19,8 @@ class Enemy:
         self._reward_money = reward_money  # Amount of money rewarded when killed
         self.player = player  # Store the player instanc
         self.damage = damage  # Dano que o inimigo causa na base
+        #Need to have this offset cause my sprite has empty space and it needs to match the sprite with the hitbox
+        self.off_set_rect = 14
 
          # Animation setup
         self.animations = None  # Dictionary with spritesheets
@@ -64,12 +66,12 @@ class Enemy:
     # Property for x
     @property
     def x(self):
-        return self._x
+        return self._x 
 
     @x.setter
     def x(self, value):
         self._x = value
-        self._rect.x = value  # Update rect position when x changes
+        self._rect.x = value  + self.off_set_rect # Update rect position when x changes
 
     # Property for y
     @property
@@ -79,7 +81,7 @@ class Enemy:
     @y.setter
     def y(self, value):
         self._y = value
-        self._rect.y = value  # Update rect position when y changes
+        self._rect.y = value  + self.off_set_rect # Update rect position when y changes
 
     # Property for speed
     @property
@@ -175,6 +177,18 @@ class Enemy:
         """Draws the current frame of the animation on the screen."""
         frame = self.animations[self.current_animation][self.animation_frame]
         screen.blit(frame, (self._x, self._y))
+        self.draw_hitbox(screen)
+
+    def draw_hitbox(self, screen, color=(255, 0, 0)):
+        """
+        Draws the enemy's hitbox (rect) on the screen.
+        
+        Args:
+            screen (pygame.Surface): The surface to draw the hitbox on.
+            color (tuple): The RGB color of the hitbox (default is red).
+        """
+        pygame.draw.rect(screen, color, self.rect, 2)  # Draws the rect as a rectangle outline (thickness = 2)
+        print(f"position of rect: x={self.rect.x} y={self.rect.y}")
 
     def move(self):
         """Moves the enemy along the path and updates animation direction."""

@@ -71,8 +71,8 @@ class Projectile:
     def move(self):
         """Moves the projectile towards the target"""
         # Calculate direction towards the target
-        direction_x = self._target.x - self._x
-        direction_y = self._target.y - self._y
+        direction_x = self._target.rect.x - self._x
+        direction_y = self._target.rect.y - self._y
         distance = math.sqrt(direction_x**2 + direction_y**2)
         
         # Normalize direction vector

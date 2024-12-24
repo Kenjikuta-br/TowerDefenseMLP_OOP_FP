@@ -65,9 +65,9 @@ def main():
 
     # Setup enemy manager and path
     enemy_manager = EnemyManager()
-    path = [(1056, 495), (1056, 275), (352, 275), (352, 165), (1280, 156)]
-    enemy1 = Slime(0, 495, path,player, enemy_manager)
-    enemy2 = Wolf(0, 495, path,player, enemy_manager)
+    path = [(1032, 471), (1032, 251), (328, 251), (328, 141), (1280, 141)]
+    enemy1 = Slime(0, 471, path,player, enemy_manager)
+    #enemy2 = Wolf(0, 471, path,player, enemy_manager)
     
 
     # Setup clock and game loop
