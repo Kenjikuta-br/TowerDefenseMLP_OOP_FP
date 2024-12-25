@@ -90,6 +90,7 @@ def main():
 
     # Font for rendering text
     font = pygame.font.Font(None, 36)
+    font_big = pygame.font.Font(None, 100)
 
     while running:
         screen.fill(settings.BACKGROUND_COLOR)
@@ -115,21 +116,25 @@ def main():
                     if clicked_option:
                         tower_menu_manager.handle_menu_click(clicked_option, i, player)
 
-        # Update and draw towers and enemies
+    
+
+        # Update and draw towers
         tower_menu_manager.update(enemy_manager.enemies, current_time)
         tower_menu_manager.draw(screen)
 
         # Draw grid
         draw_grid(screen, settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT)
 
-        enemy_manager.delta_time = delta_time
-        enemy_manager.update()
+        # Update and draw enemies
+        enemy_manager.update(delta_time)
         enemy_manager.draw(screen)
 
         # Draw player status
         player.draw_status(screen, font)
 
+        # Update and draw wave_manager
         wave_manager.update(delta_time)
+        wave_manager.draw(screen, font, font_big)
 
 
 

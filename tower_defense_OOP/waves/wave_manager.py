@@ -1,3 +1,4 @@
+import pygame
 from enemys.enemy_goblin import Goblin
 from enemys.enemy_slime import Slime
 from enemys.enemy_wolf import Wolf
@@ -14,6 +15,7 @@ class WaveManager:
         self.time_since_last_wave = 0  # Tempo desde o final da última wave
         self.enemies_to_spawn = []  # Lista de inimigos restantes na wave atual
         self.path = path #path que os inimigos tem de passar
+        self.display_wave_timer = 0  # Timer para exibir "Wave começou!"
 
     def add_wave(self, wave):
         self.waves.append(wave)
@@ -28,6 +30,7 @@ class WaveManager:
             for enemy_class, count in wave.enemies:
                 self.enemies_to_spawn.extend([enemy_class] * count)
             self.time_since_last_spawn = 0
+            self.display_wave_timer = 3  # Exibir "Wave começou!" por 3 segundos
         else:
             print("Todas as waves foram completadas!")
 
@@ -35,6 +38,10 @@ class WaveManager:
         """Atualiza a lógica das waves"""
         if self.current_wave_index >= len(self.waves):
             return  # Todas as waves foram completadas
+        
+        # Atualizar o timer de exibição do texto da wave
+        if self.display_wave_timer > 0:
+            self.display_wave_timer -= delta_time
 
 
         # Se ainda há inimigos para spawnar na wave atual
@@ -68,3 +75,21 @@ class WaveManager:
 
         print(f"Spawnando inimigo: {enemy.name}")
 
+    def draw(self, screen, font_timer, font_big):
+        """Desenha informações da wave na tela"""
+        if self.current_wave_index < len(self.waves) and self.current_wave_index >= 0:
+            wave_number = self.waves[self.current_wave_index].number
+            next_wave_timer = max(0, self.waves[self.current_wave_index].next_wave_delay - self.time_since_last_wave)
+
+            # Desenhar a wave atual e o tempo para a próxima wave
+            wave_text = font_timer.render(f"Wave Atual: {wave_number}", True, (255, 255, 255))
+            next_wave_text = font_timer.render(f"Próxima wave em: {int(next_wave_timer)}s", True,  (255, 255, 255))
+
+            screen.blit(wave_text, (10, 600))
+            screen.blit(next_wave_text, (10, 630))
+
+        # Exibir "Wave começou!" em grande quando uma nova wave iniciar
+        if self.display_wave_timer > 0:
+            wave_start_text = font_big.render(f"Wave {self.waves[self.current_wave_index].number} começou!", True, (255, 0, 0))
+            text_rect = wave_start_text.get_rect(center=(screen.get_width() // 2, screen.get_height() // 2))
+            screen.blit(wave_start_text, text_rect)

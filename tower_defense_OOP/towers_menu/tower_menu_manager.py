@@ -1,5 +1,5 @@
 from .ice_tower import IceTower
-from .electric_tower import EletricTower
+from .electric_tower import ElectricTower
 from .black_tower import BlackTower
 from .menu import Menu
 
@@ -109,7 +109,7 @@ class TowerMenuManager:
                     print("Criando Torre 2")
                 elif clicked_option == "Criar Torre 3":
                     # Create Electric Tower
-                    new_tower = EletricTower(menu.x, menu.y, 10, 200, "tower_defense_OOP/assets/eletric_tower.png", self)
+                    new_tower = ElectricTower(menu.x, menu.y, 10, 200, "tower_defense_OOP/assets/electric_tower.png", self)
                     self.add_tower(new_tower, index)
                     menu.tower = new_tower
                     print("Criando Torre 3")

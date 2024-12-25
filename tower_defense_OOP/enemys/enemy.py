@@ -12,8 +12,6 @@ class Enemy:
         self._manager.add_enemy(self)  # Automatically adds the enemy
         self._rect = pygame.Rect(x, y, 20, 20)  # Defines the area of the enemy
         self._is_dead = False  # Initializes the is_dead attribute
-        self._is_slowed = False
-        self._slow_effect = 2  # Divide speed by slow_effect if slowed
         self._path = path  # List of waypoints (e.g., [(x1, y1), (x2, y2), ...])
         self._current_waypoint = 0  # Index of the next waypoint to move towards
         self._reward_money = reward_money  # Amount of money rewarded when killed
@@ -29,6 +27,12 @@ class Enemy:
         self.animation_speed = 0.1  # Speed of frame changes
         self.time_accumulator = 0
         self_facing_right = True
+
+        # Slowed setup
+        self._is_slowed = False
+        self._slow_effect = 2  # Divide speed by slow_effect if slowed
+        self._slow_duration = 0  # Duração do efeito de slow (em segundos)
+        self._slow_timer = 0  # Tempo restante do efeito de slow
 
     # Properties for reward_money
     @property
@@ -246,9 +250,24 @@ class Enemy:
 
         self.manager.remove_enemy(self)  # Removes the enemy from the manager
 
-    def slow(self):
+    def update(self, delta_time):
+        """
+        Atualiza o estado do inimigo, incluindo o efeito de slow.
+
+        Args:
+            delta_time (float): Tempo decorrido desde o último quadro (em segundos).
+        """
+        # Atualiza o temporizador do efeito de slow
+        if self._is_slowed:
+            self._slow_timer -= delta_time
+            if self._slow_timer <= 0:
+                self._is_slowed = False  # Remove o efeito de slow
+                self._slow_timer = 0
+
+    def slow(self, duration):
         """Applies the slow effect to the enemy"""
         self.is_slowed = True
+        self._slow_timer = duration
 
 
     def load_spritesheet(self, file, rows, cols):

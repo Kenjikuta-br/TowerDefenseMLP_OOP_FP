@@ -1,6 +1,6 @@
 from .tower import Tower
 import math
-from projectiles.projectile import Projectile
+from projectiles.ice_projectile import IceProjectile
 
 class IceTower(Tower):
     def __init__(self, x, y, damage, range, sprite_path, manager, slow_effect):
@@ -22,7 +22,6 @@ class IceTower(Tower):
 
             if closest_enemy != None:  # If there's an enemy within range, attack it
                 # Launch a new projectile towards the closest enemy
-                projectile = Projectile(self.x + self.rect.width // 2, self.y + self.rect.height // 2, closest_enemy, self.damage)
+                projectile = IceProjectile(self.x + self.rect.width // 2, self.y + self.rect.height // 2, closest_enemy, self.damage)
                 self.projectiles.append(projectile)
-                closest_enemy.slow()  # Apply slowing effect to the enemy
                 self.last_shot_time = current_time  # Reset the timer after firing a projectile

@@ -1,6 +1,33 @@
 import pygame
 import math
 
+from PIL import Image
+
+def load_gif_frames(gif_path):
+    frames = []
+    gif = Image.open(gif_path)
+    for frame in range(gif.n_frames):
+        gif.seek(frame)
+        pygame_image = pygame.image.fromstring(gif.tobytes(), gif.size, gif.mode)
+        frames.append(pygame_image)
+    return frames
+
+def load_png_frames_black(folder_path, frame_count):
+    frames = []
+    for i in range(frame_count):
+        image = pygame.image.load(f"{folder_path}/00{i+1}.png").convert_alpha()
+        frames.append(image)
+    return frames
+
+def load_png_frames_ice(folder_path, frame_count):
+    frames = []
+    for i in range(frame_count):
+        image = pygame.image.load(f"{folder_path}/1_{i+1}.png").convert_alpha()
+        frames.append(image)
+    return frames
+
+
+
 class Projectile:
     def __init__(self, x, y, target, damage):
         self._x = x
@@ -11,6 +38,9 @@ class Projectile:
         self._image = pygame.Surface((10, 10))  # Small circle for the projectile
         self._image.fill((0, 0, 255))  # Color of the projectile (Blue)
         self._rect = self._image.get_rect(center=(x, y))  # Position of the projectile
+        self._electric_frames = load_gif_frames("tower_defense_OOP/assets/projectiles/electric_projectile/spark.gif")
+        self._black_frames = load_png_frames_black("tower_defense_OOP/assets/projectiles/black_projectile", 5)
+        self._ice_frames = load_png_frames_ice("tower_defense_OOP/assets/projectiles/ice_projectile", 22)
 
     @property
     def x(self):

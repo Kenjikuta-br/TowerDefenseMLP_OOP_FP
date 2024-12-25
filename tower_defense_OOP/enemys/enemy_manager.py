@@ -36,12 +36,16 @@ class EnemyManager:
         if enemy in self.__enemies:
             self.__enemies.remove(enemy)
 
-    def update(self):
+    def update(self, delta_time):
         """Atualiza o estado de todos os inimigos."""
         for enemy in self.enemies:
             if not enemy.is_dead:
                 enemy.move()
                 enemy.update_animation(self.delta_time)
+                enemy.update(self.delta_time)
+
+        """Atualiza delta_time"""
+        self.delta_time = delta_time
 
     def draw(self, screen):
         """Desenha todos os inimigos na tela."""
