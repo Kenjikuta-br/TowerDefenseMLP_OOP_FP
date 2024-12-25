@@ -1,18 +1,25 @@
 import pygame
-from player import Player
-from towers_menu import TowerMenuManager
-from enemys import Enemy, Slime, Goblin, Wolf, EnemyManager
-from towers_menu import Menu
-from waves import WaveManager, Wave
+from player import create_player, draw_status
 import settings
+from tower_menu_manager import (
+    create_tower_menu_manager,add_menu, handle_menu_click, update as update_tower_menu_manager, draw as draw_tower_menu_manager
+)
+from wave_manager import (
+    create_wave_manager, add_wave, update_wave_manager, start_next_wave
+)
+from menu import handle_click
+from wave import create_wave
+from enemy_goblin import create_goblin
+from enemy_slime import create_slime
+from enemy_wolf import create_wolf
+from enemy_manager import create_enemy_manager, update as update_enemy_manager, draw as draw_enemy_manager
 
-# Initialize Pygame
+
+
 pygame.init()
-
 # Set up the game screen
 screen = pygame.display.set_mode((settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT))
 pygame.display.set_caption("Tower Defense")
-
 
 def draw_grid(screen, grid_width, grid_height, cell_width=64, cell_height=110, color=(255, 255, 255)):
     """
@@ -42,46 +49,49 @@ def can_build_here(x, y):
         return False
     return True
 
+
+
 def main():
+
     # Initialize player
-    player = Player(money=300, base_health=150)
+    player = create_player(money=300, base_health=150)
 
     # Create TowerMenuManager
-    tower_menu_manager = TowerMenuManager()
+    tower_menu_manager = create_tower_menu_manager()
 
     # Setup menus for tower placement
     x_start, x_end = 0, 1280
     y_start, y_end = 0, 660
     x_step = 64
     y_step = 110
-    
+
     for y in range(y_start, y_end, y_step):
         for x in range(x_start, x_end, x_step):
             if can_build_here(x, y):
-                tower_menu_manager.add_menu(x, y, tower_menu_manager)
+                add_menu(tower_menu_manager,x, y, tower_menu_manager)
 
-    # Setup enemy manager and path
-    enemy_manager = EnemyManager()
+    # Create WaveManager
+    enemy_manager = create_enemy_manager()
+
     path = [(1032, 471), (1032, 251), (328, 251), (328, 141), (1280, 141)]
-    enemy1 = Slime(0, 471, path,player, enemy_manager)
-    enemy2 = Wolf(0, 471, path,player, enemy_manager)
-    
-    wave_manager = WaveManager(0, 471, enemy_manager, player, path)
-
-    # Configurando as waves
-    wave1 = Wave(1, [(Slime, 5)], 1, 5)  # 5 Slimes, 1 segundo entre cada spawn, 5 segundos até a próxima wave
-    wave2 = Wave(2, [(Slime, 3), (Goblin, 2)], 1, 10)  # 3 Slimes e 2 Goblins
-    wave3 = Wave(3, [(Goblin, 4), (Wolf, 1)], 1, 10)  # 4 Goblins e 1 Wolf
-
-    wave_manager.add_wave(wave1)
-    wave_manager.add_wave(wave2)
-    wave_manager.add_wave(wave3)
-
-    # Começando a primeira wave
-    wave_manager.start_next_wave()
+    enemy1 = create_slime(0, 471, path,player, enemy_manager)
+    enemy2 = create_wolf(0, 471, path,player, enemy_manager)
 
 
-    # Setup clock and game loop
+    wave_manager = create_wave_manager(start_x=0, start_y=471, enemy_manager=enemy_manager, player=player, path=path)
+
+    # Create waves
+    wave1 = create_wave(1, [(create_slime, 5)], 1, 5)
+    wave2 = create_wave(2, [(create_slime, 3), (create_goblin, 2)], 1, 10)
+    wave3 = create_wave(3, [(create_goblin, 4), (create_wolf, 1)], 1, 5)
+
+    add_wave(wave_manager, wave1)
+    add_wave(wave_manager, wave2)
+    add_wave(wave_manager, wave3)
+
+    start_next_wave(wave_manager)
+
+     # Setup clock and game loop
     clock = pygame.time.Clock()
     running = True
 
@@ -110,27 +120,27 @@ def main():
                 running = False
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_pos = pygame.mouse.get_pos()
-                menus = tower_menu_manager.menus
+                menus = tower_menu_manager['menus']
                 for i in range(len(menus)):
-                    clicked_option = menus[i].handle_click(mouse_pos)
+                    clicked_option = handle_click(menus[i],mouse_pos)
                     if clicked_option:
-                        tower_menu_manager.handle_menu_click(clicked_option, i, player)
+                        handle_menu_click(tower_menu_manager, clicked_option, i, player)
 
         # Update and draw towers and enemies
-        tower_menu_manager.update(enemy_manager.enemies, current_time)
-        tower_menu_manager.draw(screen)
+        update_tower_menu_manager(tower_menu_manager, enemy_manager['enemies'], current_time)
+        draw_tower_menu_manager(tower_menu_manager, screen)
 
         # Draw grid
         draw_grid(screen, settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT)
 
-        enemy_manager.delta_time = delta_time
-        enemy_manager.update()
-        enemy_manager.draw(screen)
+        enemy_manager['delta_time'] = delta_time
+        update_enemy_manager(enemy_manager)
+        draw_enemy_manager(enemy_manager, screen)
 
         # Draw player status
-        player.draw_status(screen, font)
+        draw_status(player, screen, font)
 
-        wave_manager.update(delta_time)
+        update_wave_manager(wave_manager, delta_time)
 
 
 
@@ -140,6 +150,8 @@ def main():
         # Limit FPS to 60
         clock.tick(60)
 
+
+        
     pygame.quit()
 
 if __name__ == "__main__":
