@@ -30,7 +30,7 @@ class WaveManager:
             for enemy_class, count in wave.enemies:
                 self.enemies_to_spawn.extend([enemy_class] * count)
             self.time_since_last_spawn = 0
-            self.display_wave_timer = 3  # Exibir "Wave começou!" por 3 segundos
+            self.display_wave_timer = 1.5  # Exibir "Wave começou!" por 3 segundos
         else:
             print("Todas as waves foram completadas!")
 

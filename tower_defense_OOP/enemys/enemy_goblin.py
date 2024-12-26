@@ -3,8 +3,8 @@ from .enemy import Enemy
 class Goblin(Enemy):
     def __init__(self, x, y, path, player, manager):
         # Goblins have more health and damage but are slower 
-        super().__init__(name="Goblin", health=100, x=x, y=y, speed=3, 
-                         manager=manager, path=path, reward_money=20, player=player, damage=15)
+        super().__init__(name="Goblin", health=500, x=x, y=y, speed=2, 
+                         manager=manager, path=path, reward_money=100, player=player, damage=35)
         self._stealth = False  # Goblins have a stealth ability that can be toggled
         animations = {
             "walk_down": self.load_spritesheet("tower_defense_OOP/assets/goblin/walk/D_Walk.png", rows=1, cols=6),

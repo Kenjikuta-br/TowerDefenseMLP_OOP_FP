@@ -44,7 +44,7 @@ def can_build_here(x, y):
 
 def main():
     # Initialize player
-    player = Player(money=300, base_health=150)
+    player = Player(money=450, base_health=100)
 
     # Create TowerMenuManager
     tower_menu_manager = TowerMenuManager()
@@ -63,19 +63,22 @@ def main():
     # Setup enemy manager and path
     enemy_manager = EnemyManager()
     path = [(1032, 471), (1032, 251), (328, 251), (328, 141), (1280, 141)]
-    enemy1 = Slime(0, 471, path,player, enemy_manager)
-    enemy2 = Wolf(0, 471, path,player, enemy_manager)
     
     wave_manager = WaveManager(0, 471, enemy_manager, player, path)
 
     # Configurando as waves
     wave1 = Wave(1, [(Slime, 5)], 1, 5)  # 5 Slimes, 1 segundo entre cada spawn, 5 segundos até a próxima wave
-    wave2 = Wave(2, [(Slime, 3), (Goblin, 2)], 1, 10)  # 3 Slimes e 2 Goblins
-    wave3 = Wave(3, [(Goblin, 4), (Wolf, 1)], 1, 10)  # 4 Goblins e 1 Wolf
+    wave2 = Wave(2, [(Slime, 5), (Wolf, 2), (Slime, 5)], 1, 5) 
+    wave3 = Wave(3, [(Wolf, 5), (Goblin, 1)], 0.75, 5) 
+    wave4 = Wave(4, [(Goblin, 3)], 0.75, 5) 
+    wave5 = Wave(5, [(Slime, 10), (Goblin, 5)], 0.5, 5)  
+
 
     wave_manager.add_wave(wave1)
     wave_manager.add_wave(wave2)
     wave_manager.add_wave(wave3)
+    wave_manager.add_wave(wave4)
+    wave_manager.add_wave(wave5)
 
     # Começando a primeira wave
     wave_manager.start_next_wave()

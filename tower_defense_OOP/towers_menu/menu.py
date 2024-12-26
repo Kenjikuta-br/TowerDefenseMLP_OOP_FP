@@ -48,7 +48,7 @@ class Menu:
     def update_options(self):
         """Atualiza as opções do menu dependendo do estado da torre"""
         if self.tower is None:
-            self.options = ["Criar Torre 1", "Criar Torre 2", "Criar Torre 3"]
+            self.options = ["Black - 100", "Ice - 150", "Electric - 200"]
         else:
             self.options = ["Vender Torre", "Upgrade Torre"]
     

@@ -3,8 +3,8 @@ from .enemy import Enemy
 class Slime(Enemy):
     def __init__(self, x, y, path, player, manager):
         # Slime has lower health and speed, but a special healing ability
-        super().__init__(name="Slime", health=50, x=x, y=y, speed=2, 
-                         manager=manager, path=path, reward_money=10, player=player, damage=5)
+        super().__init__(name="Slime", health=100, x=x, y=y, speed=2, 
+                         manager=manager, path=path, reward_money=20, player=player, damage=10)
         self._healing_rate = 1  # Slime heals itself slowly over time
 
         animations = {

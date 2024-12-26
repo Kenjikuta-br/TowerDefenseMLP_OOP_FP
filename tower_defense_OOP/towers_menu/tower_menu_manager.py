@@ -85,9 +85,9 @@ class TowerMenuManager:
 
         # Define the costs of the towers
         tower_costs = {
-            "Criar Torre 1": 100,  # Cost for Tower 1
-            "Criar Torre 2": 150,  # Cost for Ice Tower
-            "Criar Torre 3": 200   # Cost for Electric Tower
+            "Black - 100": 100,  # Cost for  Black Tower
+            "Ice - 150": 150,  # Cost for Ice Tower
+            "Electric - 200": 200   # Cost for Electric Tower
         }
 
         """Função que lida com a interação do menu e realiza ações correspondentes."""
@@ -95,28 +95,27 @@ class TowerMenuManager:
             # Check if the player has enough money
             cost = tower_costs[clicked_option]
             if player.money >= cost:
-                if clicked_option == "Criar Torre 1":
-                    # Create Tower 1
-                    new_tower = BlackTower(menu.x, menu.y, 10, 200, "tower_defense_OOP/assets/black_tower.png", self)
+                if clicked_option == "Black - 100":
+                    # Create Black Tower
+                    #  x, y, damage, range, sprite_path, manager, shoot_delay
+                    new_tower = BlackTower(menu.x, menu.y, 40, 225, "tower_defense_OOP/assets/black_tower.png", self, 2.0)
                     self.add_tower(new_tower, index)
                     menu.tower = new_tower
-                    print("Criando Torre 1")
-                elif clicked_option == "Criar Torre 2":
+                elif clicked_option == "Ice - 150":
                     # Create Ice Tower
-                    new_tower = IceTower(menu.x, menu.y, 10, 200, "tower_defense_OOP/assets/ice_tower.png", self, 2)
+                    # x, y, damage, range, sprite_path, manager, slow_effect, shoot_delay
+                    new_tower = IceTower(menu.x, menu.y, 10, 150, "tower_defense_OOP/assets/ice_tower.png", self, 3, 1.0)
                     self.add_tower(new_tower, index)
                     menu.tower = new_tower
-                    print("Criando Torre 2")
-                elif clicked_option == "Criar Torre 3":
+                elif clicked_option == "Electric - 200":
                     # Create Electric Tower
-                    new_tower = ElectricTower(menu.x, menu.y, 10, 200, "tower_defense_OOP/assets/electric_tower.png", self)
+                    #  x, y, damage, range, sprite_path, manager, shoot_delay
+                    new_tower = ElectricTower(menu.x, menu.y, 10, 130, "tower_defense_OOP/assets/electric_tower.png", self, 0.5)
                     self.add_tower(new_tower, index)
                     menu.tower = new_tower
-                    print("Criando Torre 3")
                 
                 # Deduct the cost from the player's money
                 player.money -= cost
-                print(f"Dinheiro restante: {player.money}")
                 
                 # Toggle menu visibility
                 menu.toggle_visibility()

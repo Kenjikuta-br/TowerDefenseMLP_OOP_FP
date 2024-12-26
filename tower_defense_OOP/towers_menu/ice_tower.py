@@ -3,8 +3,8 @@ import math
 from projectiles.ice_projectile import IceProjectile
 
 class IceTower(Tower):
-    def __init__(self, x, y, damage, range, sprite_path, manager, slow_effect):
-        super().__init__(x, y, damage, range, "Ice Tower", sprite_path, manager)
+    def __init__(self, x, y, damage, range, sprite_path, manager, slow_effect, shoot_delay):
+        super().__init__(x, y, damage, range, "Ice Tower", sprite_path, manager, shoot_delay)
         self._slow_effect = slow_effect  # Percentage to slow enemies
     
     def attack(self, enemies, current_time):
@@ -15,7 +15,8 @@ class IceTower(Tower):
 
             for enemy in enemies:
                 if self.is_in_range(enemy):  # Check if the enemy is within range
-                    distance = math.sqrt((self.x - enemy.x) ** 2 + (self.y - enemy.y) ** 2)
+                    #self.x e etc é o canto superior direito, por isso pegar width e height // 2 para pegar o centro da torre, mesma coisa para o enemy que tem rect(20,20)
+                    distance = math.sqrt(((self.x + self.sprite.get_width() // 2) - (enemy.x + 10)) ** 2 + ((self.y + self.sprite.get_height() // 2) - (enemy.y+10)) ** 2)
                     if distance < closest_distance:  # Update the closest enemy
                         closest_distance = distance
                         closest_enemy = enemy

@@ -2,8 +2,8 @@ from .tower import Tower
 from projectiles.electric_projectile import ElectricProjectile
 
 class ElectricTower(Tower):
-    def __init__(self, x, y, damage, range, sprite_path, manager):
-        super().__init__(x, y, damage, range, "Electric Tower", sprite_path, manager)
+    def __init__(self, x, y, damage, range, sprite_path, manager, shoot_delay):
+        super().__init__(x, y, damage, range, "Electric Tower", sprite_path, manager, shoot_delay)
 
 
     def attack(self, enemies, current_time):

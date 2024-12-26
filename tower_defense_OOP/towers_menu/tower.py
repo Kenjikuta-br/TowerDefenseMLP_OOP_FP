@@ -3,7 +3,7 @@ import math
 from projectiles.projectile import Projectile
 
 class Tower:
-    def __init__(self, x, y, damage, range, type, sprite_path, manager):
+    def __init__(self, x, y, damage, range, type, sprite_path, manager, shoot_delay):
         self._x = x
         self._y = y
         self._damage = damage
@@ -15,7 +15,7 @@ class Tower:
         self._manager = manager  # Referência ao TowerManager
         self._projectiles = []  # Lista para armazenar os projéteis
         self._last_shot_time = 0  # Rastrear o último tempo de disparo
-        self._shoot_delay = 0.5  # Tempo entre disparos (em segundos)
+        self._shoot_delay = shoot_delay  # Tempo entre disparos (em segundos)
 
     # Getters and Setters for x
     @property
@@ -115,7 +115,8 @@ class Tower:
 
             for enemy in enemies:
                 if self.is_in_range(enemy):  # Check if the enemy is within range
-                    distance = math.sqrt((self.x - enemy.x) ** 2 + (self.y - enemy.y) ** 2)
+                    #self.x e etc é o canto superior direito, por isso pegar width e height // 2 para pegar o centro da torre, mesma coisa para o enemy que tem rect(20,20)
+                    distance = math.sqrt(((self.x + self.sprite.get_width() // 2) - (enemy.x + 10)) ** 2 + ((self.y + self.sprite.get_height() // 2) - (enemy.y+10)) ** 2)
                     if distance < closest_distance:  # Update the closest enemy
                         closest_distance = distance
                         closest_enemy = enemy
@@ -129,7 +130,8 @@ class Tower:
     
     def is_in_range(self, enemy):
         """Checks if the enemy is within the tower's range"""
-        distance = math.sqrt((self.x - enemy.x) ** 2 + (self.y - enemy.y) ** 2)
+        #self.x e etc é o canto superior direito, por isso pegar width e height // 2 para pegar o centro da torre, mesma coisa para o enemy que tem rect(20,20)
+        distance = math.sqrt(((self.x + self.sprite.get_width() // 2) - (enemy.x + 24)) ** 2 + ((self.y + self.sprite.get_height() // 2) - (enemy.y + 24)) ** 2)
         return distance <= self.range
 
     def update_projectiles(self):
