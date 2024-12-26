@@ -3,7 +3,7 @@ from .enemy import Enemy
 class Goblin(Enemy):
     def __init__(self, x, y, path, player, manager):
         # Goblins have more health and damage but are slower 
-        super().__init__(name="Goblin", health=500, x=x, y=y, speed=2, 
+        super().__init__(name="Goblin", health=400, x=x, y=y, speed=2, 
                          manager=manager, path=path, reward_money=100, player=player, damage=35)
         self._stealth = False  # Goblins have a stealth ability that can be toggled
         animations = {

@@ -15,7 +15,7 @@ class BlackTower(Tower):
 
             for enemy in enemies:
                 if self.is_in_range(enemy):  # Check if the enemy is within range
-                    #self.x e etc é o canto superior direito, por isso pegar width e height // 2 para pegar o centro da torre, mesma coisa para o enemy que tem rect(20,20)
+                    #self.x e etc é o canto superior direito, por isso pegar width e height // 2 para pegar o centro da torre, mesma coisa para o enemy que usa uma sprite 48x48
                     distance = math.sqrt(((self.x + self.sprite.get_width() // 2) - (enemy.x + 24)) ** 2 + ((self.y + self.sprite.get_height() // 2) - (enemy.y+24)) ** 2)
                     if distance < closest_distance:  # Update the closest enemy
                         closest_distance = distance
