@@ -29,6 +29,7 @@ def start_next_wave(wave_manager):
         for enemy_class, count in wave['enemies']:
             wave_manager['enemies_to_spawn'].extend([enemy_class] * count)
         wave_manager['time_since_last_spawn'] = 0
+        wave_manager['display_wave_timer'] = 1.5  # Exibir "Wave começou!" por 3 segundos
     else:
         print("Todas as waves foram completadas!")
 
@@ -69,16 +70,16 @@ def spawn_enemy(wave_manager, enemy_class):
     print(f"Spawnando inimigo: {enemy['name']}")
 
 def draw_wave_manager(wave_manager, screen, font_timer, font_big):
-    if wave_manager['current_wave_index'] < len(wave_manager['waves']) and wave_manager['display_wave_timer'] > 0:
-        wave = wave_manager['waves'][wave_manager['current_wave_index']]
-        wave_number = wave['number']
+    """Desenha informações da wave na tela"""
+    if wave_manager['current_wave_index'] < len(wave_manager['waves']) and wave_manager['current_wave_index'] >= 0:
+        wave_number = wave_manager['waves'][wave_manager['current_wave_index']]['number']
         next_wave_timer = max(0, wave_manager['waves'][wave_manager['current_wave_index']]['next_wave_delay'] - wave_manager['time_since_last_wave'])
-
+        # Desenhar a wave atual e o tempo para a próxima wave
         wave_text = font_timer.render(f"Wave Atual: {wave_number}", True, (255, 255, 255))
         next_wave_text = font_timer.render(f"Próxima wave em: {int(next_wave_timer)}s", True,  (255, 255, 255))
         screen.blit(wave_text, (10, 600))
         screen.blit(next_wave_text, (10, 630))
-
+    # Exibir "Wave começou!" em grande quando uma nova wave iniciar
     if wave_manager['display_wave_timer'] > 0:
         wave_start_text = font_big.render(f"Wave {wave_manager['waves'][wave_manager['current_wave_index']]['number']} começou!", True, (255, 0, 0))
         text_rect = wave_start_text.get_rect(center=(screen.get_width() // 2, screen.get_height() // 2))

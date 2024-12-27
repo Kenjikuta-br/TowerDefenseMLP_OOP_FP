@@ -1,7 +1,7 @@
 import pygame
 import math
 from projectile import create_projectile, move_projectile, draw_projectile, check_collision
-from ice_projectile import create_ice_projectile, draw_ice_projectile, move_ice_projectile
+from ice_projectile import create_ice_projectile, draw_ice_projectile, move_ice_projectile, check_collision as check_ice_projectile_collision
 from electric_projectile import create_electric_projectile, draw_electric_projectile
 from black_projectile import draw_black_projectile
 
@@ -66,10 +66,12 @@ def update_projectiles(tower):
     for projectile in tower['projectiles'][:]:
         if tower['type'] == "Ice Tower":
             move_ice_projectile(projectile)
+            if (check_ice_projectile_collision(projectile)):
+                tower['projectiles'].remove(projectile)
         else:
             move_projectile(projectile)  # Move cada projétil
-        if check_collision(projectile):  # Verifica colisão
-            tower['projectiles'].remove(projectile)  # Remove o projétil após a colisão
+            if check_collision(projectile):  # Verifica colisão
+                tower['projectiles'].remove(projectile)  # Remove o projétil após a colisão
 
 def draw_tower(tower, screen):
     """Desenha a torre e seus projéteis"""
