@@ -1,4 +1,4 @@
-from enemy import move_enemy, update_animation, draw_enemy
+from enemy import move_enemy, update_animation, draw_enemy, update as update_enemy
 
 def create_enemy_manager(delta_time=0):
     return {
@@ -17,12 +17,16 @@ def remove_enemy(enemy_manager, enemy):
     if enemy in enemy_manager['enemies']:
         enemy_manager['enemies'].remove(enemy)
 
-def update(enemy_manager):
+def update(enemy_manager, delta_time):
         """Atualiza o estado de todos os inimigos."""
         for enemy in enemy_manager['enemies']:
             if not enemy['is_dead']:
                 move_enemy(enemy)
                 update_animation(enemy, enemy_manager['delta_time'])
+                update_enemy(enemy, enemy_manager['delta_time'])
+
+        """Atualiza delta_time"""
+        enemy_manager['delta_time'] = delta_time
 
 def draw(enemy_manager, screen):
     """Desenha todos os inimigos na tela."""

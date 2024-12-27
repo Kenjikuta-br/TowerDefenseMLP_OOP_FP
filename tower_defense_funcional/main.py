@@ -1,12 +1,8 @@
 import pygame
 from player import create_player, draw_status
 import settings
-from tower_menu_manager import (
-    create_tower_menu_manager,add_menu, handle_menu_click, update as update_tower_menu_manager, draw as draw_tower_menu_manager
-)
-from wave_manager import (
-    create_wave_manager, add_wave, update_wave_manager, start_next_wave
-)
+from tower_menu_manager import create_tower_menu_manager,add_menu, handle_menu_click, update as update_tower_menu_manager, draw as draw_tower_menu_manager
+from wave_manager import create_wave_manager, add_wave, update_wave_manager, start_next_wave, draw_wave_manager
 from menu import handle_click
 from wave import create_wave
 from enemy_goblin import create_goblin
@@ -49,12 +45,9 @@ def can_build_here(x, y):
         return False
     return True
 
-
-
 def main():
-
     # Initialize player
-    player = create_player(money=300, base_health=150)
+    player = create_player(money=450, base_health=100)
 
     # Create TowerMenuManager
     tower_menu_manager = create_tower_menu_manager()
@@ -72,22 +65,22 @@ def main():
 
     # Create WaveManager
     enemy_manager = create_enemy_manager()
-
     path = [(1032, 471), (1032, 251), (328, 251), (328, 141), (1280, 141)]
-    enemy1 = create_slime(0, 471, path,player, enemy_manager)
-    enemy2 = create_wolf(0, 471, path,player, enemy_manager)
 
-
-    wave_manager = create_wave_manager(start_x=0, start_y=471, enemy_manager=enemy_manager, player=player, path=path)
+    wave_manager = create_wave_manager(0, 471, enemy_manager, player, path)
 
     # Create waves
     wave1 = create_wave(1, [(create_slime, 5)], 1, 5)
-    wave2 = create_wave(2, [(create_slime, 3), (create_goblin, 2)], 1, 10)
-    wave3 = create_wave(3, [(create_goblin, 4), (create_wolf, 1)], 1, 5)
+    wave2 = create_wave(2, [(create_slime, 5),(create_wolf, 2), (create_slime, 5)], 1, 5)
+    wave3 = create_wave(3, [(create_wolf, 5), (create_goblin, 1)], 0.75, 5)
+    wave4 = create_wave(4, [(create_goblin, 3)], 0.75, 5)
+    wave5 = create_wave(5, [(create_slime, 10), (create_goblin, 5)], 0.5, 5)
 
     add_wave(wave_manager, wave1)
     add_wave(wave_manager, wave2)
     add_wave(wave_manager, wave3)
+    add_wave(wave_manager, wave4)
+    add_wave(wave_manager, wave5)
 
     start_next_wave(wave_manager)
 
@@ -101,6 +94,7 @@ def main():
 
     # Font for rendering text
     font = pygame.font.Font(None, 36)
+    font_big = pygame.font.Font(None, 100)
 
     while running:
         screen.fill(settings.BACKGROUND_COLOR)
@@ -126,6 +120,8 @@ def main():
                     if clicked_option:
                         handle_menu_click(tower_menu_manager, clicked_option, i, player)
 
+
+
         # Update and draw towers and enemies
         update_tower_menu_manager(tower_menu_manager, enemy_manager['enemies'], current_time)
         draw_tower_menu_manager(tower_menu_manager, screen)
@@ -133,14 +129,15 @@ def main():
         # Draw grid
         draw_grid(screen, settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT)
 
-        enemy_manager['delta_time'] = delta_time
-        update_enemy_manager(enemy_manager)
+  
+        update_enemy_manager(enemy_manager, delta_time)
         draw_enemy_manager(enemy_manager, screen)
 
         # Draw player status
         draw_status(player, screen, font)
 
         update_wave_manager(wave_manager, delta_time)
+        draw_wave_manager(wave_manager, screen, font, font_big)
 
 
 
@@ -149,9 +146,7 @@ def main():
 
         # Limit FPS to 60
         clock.tick(60)
-
-
-        
+       
     pygame.quit()
 
 if __name__ == "__main__":

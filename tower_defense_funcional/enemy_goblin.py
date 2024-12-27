@@ -4,15 +4,15 @@ from enemy import (
 )
 
 def create_goblin(x, y, path, player, manager):
-    goblin = create_enemy(name="Goblin", health=100, x=x, y=y, speed=3, manager=manager, path=path, reward_money=20, player=player, damage=15)
+    goblin = create_enemy(name="Goblin", health=400, x=x, y=y, speed=2, manager=manager, path=path, reward_money=100, player=player, damage=35)
     goblin['stealth'] = False
     goblin['animations'] = {
-        "walk_down": load_spritesheet("tower_defense_OOP/assets/goblin/walk/D_Walk.png", rows=1, cols=6),
-        "walk_up": load_spritesheet("tower_defense_OOP/assets/goblin/walk/U_Walk.png", rows=1, cols=6),
-        "walk_side": load_spritesheet("tower_defense_OOP/assets/goblin/walk/S_Walk.png", rows=1, cols=6),
-        "death_down": load_spritesheet("tower_defense_OOP/assets/goblin/death/D_Death.png", rows=1, cols=6),
-        "death_up": load_spritesheet("tower_defense_OOP/assets/goblin/death/U_Death.png", rows=1, cols=6),
-        "death_side": load_spritesheet("tower_defense_OOP/assets/goblin/death/S_Death.png", rows=1, cols=6),
+        "walk_down": load_spritesheet("tower_defense_funcional/assets/goblin/walk/D_Walk.png", rows=1, cols=6),
+        "walk_up": load_spritesheet("tower_defense_funcional/assets/goblin/walk/U_Walk.png", rows=1, cols=6),
+        "walk_side": load_spritesheet("tower_defense_funcional/assets/goblin/walk/S_Walk.png", rows=1, cols=6),
+        "death_down": load_spritesheet("tower_defense_funcional/assets/goblin/death/D_Death.png", rows=1, cols=6),
+        "death_up": load_spritesheet("tower_defense_funcional/assets/goblin/death/U_Death.png", rows=1, cols=6),
+        "death_side": load_spritesheet("tower_defense_funcional/assets/goblin/death/S_Death.png", rows=1, cols=6),
     }
     return goblin
 

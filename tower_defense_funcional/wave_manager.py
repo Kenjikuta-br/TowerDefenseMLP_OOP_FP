@@ -13,7 +13,8 @@ def create_wave_manager(start_x, start_y, enemy_manager, player, path):
         'time_since_last_spawn': 0,
         'time_since_last_wave': 0,
         'enemies_to_spawn': [],
-        'path': path
+        'path': path,
+        'display_wave_timer': 0
     }
 
 def add_wave(wave_manager, wave):
@@ -34,6 +35,10 @@ def start_next_wave(wave_manager):
 def update_wave_manager(wave_manager, delta_time):
     if wave_manager['current_wave_index'] >= len(wave_manager['waves']):
         return  # Todas as waves foram completadas
+
+    # Atualizar o timer de exibição do texto da wave
+    if wave_manager['display_wave_timer'] > 0:
+        wave_manager['display_wave_timer'] -= delta_time
 
     # Se ainda há inimigos para spawnar na wave atual
     if wave_manager['enemies_to_spawn']:
@@ -62,3 +67,19 @@ def spawn_enemy(wave_manager, enemy_class):
         raise ValueError("Unknown enemy class")
 
     print(f"Spawnando inimigo: {enemy['name']}")
+
+def draw_wave_manager(wave_manager, screen, font_timer, font_big):
+    if wave_manager['current_wave_index'] < len(wave_manager['waves']) and wave_manager['display_wave_timer'] > 0:
+        wave = wave_manager['waves'][wave_manager['current_wave_index']]
+        wave_number = wave['number']
+        next_wave_timer = max(0, wave_manager['waves'][wave_manager['current_wave_index']]['next_wave_delay'] - wave_manager['time_since_last_wave'])
+
+        wave_text = font_timer.render(f"Wave Atual: {wave_number}", True, (255, 255, 255))
+        next_wave_text = font_timer.render(f"Próxima wave em: {int(next_wave_timer)}s", True,  (255, 255, 255))
+        screen.blit(wave_text, (10, 600))
+        screen.blit(next_wave_text, (10, 630))
+
+    if wave_manager['display_wave_timer'] > 0:
+        wave_start_text = font_big.render(f"Wave {wave_manager['waves'][wave_manager['current_wave_index']]['number']} começou!", True, (255, 0, 0))
+        text_rect = wave_start_text.get_rect(center=(screen.get_width() // 2, screen.get_height() // 2))
+        screen.blit(wave_start_text, text_rect)

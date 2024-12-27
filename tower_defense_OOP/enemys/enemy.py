@@ -193,7 +193,7 @@ class Enemy:
         Draws the enemy's hitbox (rect) on the screen.
         
         Args:
-            screen (pygame.Surface): The surface to draw the hitbox on.
+            screen (pygame.Surface): The surface to draw the hitbox on. 
             color (tuple): The RGB color of the hitbox (default is red).
         """
         pygame.draw.rect(screen, color, self.rect, 2)  # Draws the rect as a rectangle outline (thickness = 2)

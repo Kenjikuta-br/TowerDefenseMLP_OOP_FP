@@ -1,7 +1,7 @@
-from ice_tower import create_ice_tower
-from electric_tower import create_electric_tower
-from black_tower import create_black_tower
-from tower import attack, update_projectiles, draw_projectile, sell_tower, draw_tower
+from ice_tower import create_ice_tower, attack as attack_ice_tower
+from electric_tower import create_electric_tower, attack as attack_electric_tower
+from black_tower import create_black_tower, attack as attack_black_tower
+from tower import attack, update_projectiles, draw_projectiles, sell_tower, draw_tower
 from menu import create_menu, draw as draw_menu, toggle_visibility
 
 def create_tower_menu_manager():
@@ -37,19 +37,27 @@ def remove_tower(tower_menu_manager, tower):
 def update(tower_menu_manager, enemies, current_time):
     for tower in tower_menu_manager['towers']:
         if tower != None:
-            attack(tower, enemies, current_time)  # Cada torre verifica se há inimigos dentro do alcance
+            if tower['type'] == "Black Tower":
+                attack_black_tower(tower, enemies, current_time)
+            elif tower['type'] == "Ice Tower":
+                attack_ice_tower(tower, enemies, current_time)
+            elif tower['type'] == "Electric Tower":
+                attack_electric_tower(tower, enemies, current_time)
+            #attack(tower, enemies, current_time)  # Cada torre verifica se há inimigos dentro do alcance
+
+            #attack(tower, enemies, current_time)  # Cada torre verifica se há inimigos dentro do alcance         
             update_projectiles(tower)  # Atualiza todos os projéteis da torre
 
 
 def draw(tower_menu_manager, screen):
     for tower in tower_menu_manager['towers']:
-        if tower is not None:
+        if tower != None:
             draw_tower(tower, screen)
     for menu in tower_menu_manager['menus']:
         draw_menu(menu, screen)  # Desenha cada menu
     for tower in tower_menu_manager['towers']:
         if tower != None:
-            draw_projectile(tower, screen)
+            draw_projectiles(tower, screen)
 
 def handle_menu_click(tower_menu_manager, clicked_option, index, player):
     menus = tower_menu_manager['menus']
@@ -58,30 +66,30 @@ def handle_menu_click(tower_menu_manager, clicked_option, index, player):
 
     # Define the costs of the towers
     tower_costs = {
-        "Criar Torre 1": 100,  # Cost for Black Tower
-        "Criar Torre 2": 150,  # Cost for Ice Tower
-        "Criar Torre 3": 200   # Cost for Electric Tower
+        "Black - 100": 100,  # Cost for  Black Tower
+        "Ice - 150": 150,  # Cost for Ice Tower
+        "Electric - 200": 200   # Cost for Electric Tower
     }
 
     if clicked_option in tower_costs:
         # Check if the player has enough money
         cost = tower_costs[clicked_option]
         if player['money'] >= cost:
-            if clicked_option == "Criar Torre 1":
+            if clicked_option == "Black - 100":
                 # Create Black Tower
-                new_tower = create_black_tower(menu['x'], menu['y'], 10, 200, "tower_defense_funcional/assets/black_tower.png", tower_menu_manager)
+                new_tower = create_black_tower(menu['x'], menu['y'], 40, 225, "tower_defense_funcional/assets/black_tower.png", tower_menu_manager, 2.0)
                 add_tower(tower_menu_manager, new_tower, index)
                 menu['tower'] = new_tower
                 print("Criando Torre 1")
-            elif clicked_option == "Criar Torre 2":
+            elif clicked_option == "Ice - 150":                
                 # Create Ice Tower
-                new_tower = create_ice_tower(menu['x'], menu['y'], 10, 200, "tower_defense_funcional/assets/ice_tower.png", tower_menu_manager, 2)
+                new_tower = create_ice_tower(menu['x'], menu['y'], 10, 150, "tower_defense_funcional/assets/ice_tower.png", tower_menu_manager, 3, 1.0)
                 add_tower(tower_menu_manager, new_tower, index)
                 menu['tower'] = new_tower
                 print("Criando Torre 2")
-            elif clicked_option == "Criar Torre 3":
+            elif clicked_option == "Electric - 200":
                 # Create Electric Tower
-                new_tower = create_electric_tower(menu['x'], menu['y'], 10, 200, "tower_defense_funcional/assets/electric_tower.png", tower_menu_manager)
+                new_tower = create_electric_tower(menu['x'], menu['y'], 10, 130, "tower_defense_funcional/assets/electric_tower.png", tower_menu_manager, 0.5)
                 add_tower(tower_menu_manager, new_tower, index)
                 menu['tower'] = new_tower
                 print("Criando Torre 3")

@@ -1,9 +1,9 @@
 from tower import create_tower, is_in_range
-from projectile import create_projectile
+from electric_projectile import create_electric_projectile
 
-def create_electric_tower(x, y, damage, range, sprite_path, manager):
+def create_electric_tower(x, y, damage, range, sprite_path, manager, shoot_delay):
     """Function to create an electric tower."""
-    electric_tower = create_tower(x, y, damage, range, "Electric Tower", sprite_path, manager)
+    electric_tower = create_tower(x, y, damage, range, "Electric Tower", sprite_path, manager, shoot_delay)
     return electric_tower
 
 
@@ -13,6 +13,6 @@ def attack(electric_tower, enemies, current_time):
         for enemy in enemies:
             if is_in_range(electric_tower, enemy):
                 # Launch a new projectile towards the enemy
-                projectile = create_projectile(electric_tower['x'] + electric_tower['rect'].width // 2, electric_tower['y'] + electric_tower['rect'].height // 2, enemy, electric_tower['damage'])
+                projectile = create_electric_projectile(electric_tower['x'] + electric_tower['rect'].width // 2, electric_tower['y'] + electric_tower['rect'].height // 2, enemy, electric_tower['damage'])
                 electric_tower['projectiles'].append(projectile)
         electric_tower['last_shot_time'] = current_time  # Reset the timer after firing a projectile

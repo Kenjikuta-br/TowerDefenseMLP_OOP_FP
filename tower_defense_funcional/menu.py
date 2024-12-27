@@ -25,18 +25,10 @@ def toggle_visibility(menu):
     """Alterna a visibilidade do menu"""
     menu['is_visible'] = not menu['is_visible']
 
-def show_visibility(menu):
-    """Deixa visível o Menu"""
-    menu['is_visible'] = True
-
-def hide_visibility(menu):
-    """Deixa invisível o Menu"""
-    menu['is_visible'] = False
-
 def update_options(menu):
     """Atualiza as opções do menu dependendo do estado da torre"""
     if menu['tower'] is None:
-        menu['options'] = ["Criar Torre 1", "Criar Torre 2", "Criar Torre 3"]
+        menu['options'] = ["Black - 100", "Ice - 150", "Electric - 200"]
     else:
         menu['options'] = ["Vender Torre", "Upgrade Torre"]
 

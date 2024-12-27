@@ -12,8 +12,6 @@ def create_enemy(name, health, x, y, speed, manager, path, reward_money, player,
         'manager': manager,
         'rect': pygame.Rect(x, y, 20, 20),
         'is_dead': False,
-        'is_slowed': False,
-        'slow_effect': 2,
         'path': path,
         'current_waypoint': 0,
         'reward_money': reward_money,
@@ -25,7 +23,11 @@ def create_enemy(name, health, x, y, speed, manager, path, reward_money, player,
         'animation_frame': 0,
         'animation_speed': 0.1,
         'time_accumulator': 0,
-        'facing_right': True
+        'facing_right': True,        
+        'is_slowed': False,
+        'slow_effect': 2,
+        'slow_duration': 0,
+        'slow_timer': 0
     }
     manager['enemies'].append(enemy)
     return enemy
@@ -53,11 +55,11 @@ def draw_enemy(enemy, screen):
         frame = pygame.transform.flip(frame, True, False)
     screen.blit(frame, (enemy['x'], enemy['y']))
     #for debuggin hitbox
-    draw_hitbox(enemy, screen)
+    #draw_hitbox(enemy, screen)
 
 def draw_hitbox(enemy, screen, color=(255, 0, 0)):
     pygame.draw.rect(screen, color, enemy['rect'], 2)
-    print(f"position of rect: x={enemy['rect'].x} y={enemy['rect'].y}")
+    #print(f"position of rect: x={enemy['rect'].x} y={enemy['rect'].y}")
 
 
 def move_enemy(enemy):
@@ -71,11 +73,15 @@ def move_enemy(enemy):
 
         if distance <= current_speed:
             enemy['x'] = target_x
+            enemy['rect'].x = enemy['x'] + enemy['off_set_rect']
             enemy['y'] = target_y
+            enemy['rect'].y = enemy['y'] + enemy['off_set_rect']
             enemy['current_waypoint'] += 1
         else:
             enemy['x'] += (dx / distance) * current_speed
+            enemy['rect'].x = enemy['x'] + enemy['off_set_rect'] 
             enemy['y'] += (dy / distance) * current_speed 
+            enemy['rect'].y = enemy['y'] + enemy['off_set_rect']
 
         if abs(dx) > abs(dy):
             enemy['current_animation'] = "walk_side"
@@ -96,7 +102,7 @@ def reach_base(enemy):
         enemy['manager']['enemies'].remove(enemy)
 
 def die(enemy):
-    if enemy['player'] is not None:
+    if enemy['player'] != None:
         if not enemy['is_dead']:
             add_money(enemy['player'],(enemy['reward_money']))
     enemy['is_dead'] = True
@@ -106,8 +112,17 @@ def die(enemy):
         enemy['manager']['enemies'].remove(enemy)
 
 
-def apply_slow(enemy):
+def update(enemy, delta_time):
+    if enemy['is_slowed']:
+        enemy['slow_timer'] -= delta_time
+        if enemy['slow_timer'] <= 0:
+            enemy['is_slowed'] = False
+            enemy['slow_timer'] = 0
+
+
+def slow(enemy, duration):
     enemy['is_slowed'] = True
+    enemy['slow_timer'] = duration
 
 
 def load_spritesheet(file, rows, cols):
@@ -124,22 +139,4 @@ def load_spritesheet(file, rows, cols):
             frames.append(frame)
     return frames
 
-def remove_slow(enemy):
-    enemy['is_slowed'] = False
-    enemy['slow_effect'] = 2
-
-def damage_enemy(enemy, amount):
-    enemy['health'] -= amount
-    if enemy['health'] <= 0:
-        enemy['is_dead'] = True
-
-def reward_player(enemy):
-    enemy['player'].money += enemy['reward_money']
-
-
-
-
-
-def slow(enemy):
-    enemy['is_slowed'] = True
 
